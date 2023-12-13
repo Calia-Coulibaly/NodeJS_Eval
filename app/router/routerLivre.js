@@ -25,4 +25,11 @@ RouterLivre.get("/livres/:numero/pages/:numpage", ControllerLivre.AfficherPage);
 // route /livres qui affiche ajout d'un livre
 RouterLivre.post("/livres", ControllerLivre.AjoutLivre)
 
+// route /livres qui supprime un livre
+RouterLivre.delete("/livres/:numero", ControllerLivre.SupprimerLivre)
+
+// route /livres qui modifie un livre
+RouterLivre.put("/livres/:numero", ControllerLivre.ModifierLivre)
+
+
 module.exports = { RouterLivre }

@@ -82,27 +82,51 @@ async function AjoutLivre(req, res) {
     console.log(req.body)
     let ajoutLivre = req.body
     const { value, error } = schemalivreadd.validate(ajoutLivre);
-    console.log(value)
-    console.log(error);
-    console.log(ajoutLivre)
     if (error == undefined) {
-        console.log("coucou1")
         const result = await ModelLivre.AjoutLivre(req.body);
         if (result.ok == true) {
-            // res.json({ "Resultat": "Ajout d'un livre" })
+            res.json({ "Resultat": "Ajout d'un livre" })
             console.log("Livre Ajouté")
         }
         else {
 
-            // res.json({ "Resultat": "Echec de l'ajout" })
+            res.json({ "Resultat": "Echec de l'ajout" })
             console.log("Livre non Ajouté")
 
         }
-    }else{
-        console.log("coucou2")
+    } else {
         console.log(error)
     }
 }
 
+async function ModifierLivre(req, res) {
+    const numero = req.params.numero;
+    const modifLivre = req.body;
+    const { value, error } = schemalivremodif.validate(modifLivre);
+    if (error == undefined) {
+        const result = await ModelLivre.ModifLivre(numero, modifLivre);
+        if (result.ok == true) {
+            res.json({ "Resultat": "Modification d'un livre" });
+            console.log("Livre Modifié");
+        } else {
+            res.json({ "Resultat": "Échec de la modification" });
+            console.log("Livre non Modifié");
+        }
+    } else {
+        console.log(error);
+    }
+}
 
-module.exports = { AfficherAllLivres, AfficherLivre, AfficherAllPages, AfficherPage, AjoutLivre }
+
+
+async function SupprimerLivre(req, res) {
+    const numero = req.params.numero;
+    let supprimerLivre = await ModelLivre.SupprimerLivre(numero)
+    if (supprimerLivre) {
+        res.json({ "Resultat": "Livre supprimé avec succès" });
+    } else {
+        res.status(404).json("[Erreur 404] Aucun livre trouvé pour la suppression");
+    }
+}
+
+module.exports = { AfficherAllLivres, AfficherLivre, AfficherAllPages, AfficherPage, AjoutLivre, SupprimerLivre, ModifierLivre }

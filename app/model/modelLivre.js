@@ -43,10 +43,49 @@ const AfficherPage = async (numero) => {
 
 }
 
-const AjoutLivre = async (newlivre)=>{
+const AjoutLivre = async (newlivre) => {
     const result = await dbsLivres.insert(newlivre);
     return result
 }
 
+const SupprimerLivre = async (numero) => {
+    const query = {
+        "selector": { "numero": parseInt(numero) },
+        "fields": ["_id", "_rev"],
+    }
+    const result = await dbsLivres.find(query);
+    if (result.docs.length !== 0) {
+        return await dbsLivres.destroy(result.docs[0]._id, result.docs[0]._rev);
+    }
+    return result;
+}
 
-module.exports = { AfficherAllLivres, AfficherLivre, AfficherAllPages, AfficherPage, AjoutLivre }
+
+const ModifLivre = async (numero, modifLivre) => {
+    const query = {
+        "selector": { "numero": parseInt(numero) },
+        "fields": ["_id", "_rev"],
+    };
+
+    const result = await dbsLivres.find(query);
+    if (result.docs.length !== 0) {
+        let modiflivre = {
+            "_id": result.docs[0]._id,
+            "_rev": result.docs[0]._rev,
+            "titre": modifLivre.titre,
+            "numero": modifLivre.numero,
+            "resume": modifLivre.resume,
+            "pages": modifLivre.pages,
+            "auteur": modifLivre.auteur,
+            "date": modifLivre.date,
+            "nombrePages": modifLivre.nombrePages,
+            "isbn": modifLivre.isbn
+        }
+        let modif = await dbsLivres.insert(modiflivre);
+        return modif;
+    }
+    
+
+}
+
+module.exports = { AfficherAllLivres, AfficherLivre, AfficherAllPages, AfficherPage, AjoutLivre, SupprimerLivre, ModifLivre }
